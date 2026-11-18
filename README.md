@@ -1,6 +1,6 @@
 # Calculadora Web (Python Flask HTML e JavaScript)
 
-**Autor:** SEU NOME COMPLETO AQUI
+**Autor:** Kaique Gomes Lisboa
 
 Este projeto é um exemplo didático de como usar **Python + Flask + HTML + JavaScript** para criar uma calculadora simples com páginas de **Soma**, **Subtração**, **Multiplicação** e **Divisão**.
 
