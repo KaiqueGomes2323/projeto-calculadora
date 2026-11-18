@@ -8,6 +8,22 @@ import operacoes  # importa funções do arquivo separado
 
 app = Flask(__name__)
 
+
+def ler_valores():
+    """Lê valor1 e valor2 do JSON da requisição.
+    Retorna (valor1, valor2) ou levanta ValueError com mensagem amigável."""
+    dados = request.get_json(silent=True) or {}
+    try:
+        return float(dados["valor1"]), float(dados["valor2"])
+    except (KeyError, TypeError, ValueError):
+        raise ValueError("Digite dois números válidos.")
+
+
+@app.errorhandler(ValueError)
+def erro_de_valor(e):
+    return jsonify({"erro": str(e)}), 400
+
+
 # Página inicial
 @app.route("/")
 def index():
@@ -20,9 +36,7 @@ def soma_page():
 
 @app.route("/api/soma", methods=["POST"])
 def soma():
-    dados = request.get_json()
-    valor1 = float(dados["valor1"])
-    valor2 = float(dados["valor2"])
+    valor1, valor2 = ler_valores()
     resultado = operacoes.calcular_soma(valor1, valor2)
     return jsonify({"resultado": resultado})
 
@@ -33,9 +47,7 @@ def subtracao_page():
 
 @app.route("/api/subtracao", methods=["POST"])
 def subtracao():
-    dados = request.get_json()
-    valor1 = float(dados["valor1"])
-    valor2 = float(dados["valor2"])
+    valor1, valor2 = ler_valores()
     resultado = operacoes.calcular_subtracao(valor1, valor2)
     return jsonify({"resultado": resultado})
 
@@ -46,9 +58,7 @@ def multiplicacao_page():
 
 @app.route("/api/multiplicacao", methods=["POST"])
 def multiplicacao():
-    dados = request.get_json()
-    valor1 = float(dados["valor1"])
-    valor2 = float(dados["valor2"])
+    valor1, valor2 = ler_valores()
     resultado = operacoes.calcular_multiplicacao(valor1, valor2)
     return jsonify({"resultado": resultado})
 
@@ -59,13 +69,8 @@ def divisao_page():
 
 @app.route("/api/divisao", methods=["POST"])
 def divisao():
-    dados = request.get_json()
-    valor1 = float(dados["valor1"])
-    valor2 = float(dados["valor2"])
-    try:
-        resultado = operacoes.calcular_divisao(valor1, valor2)
-    except ValueError as e:
-        return jsonify({"erro": str(e)}), 400
+    valor1, valor2 = ler_valores()
+    resultado = operacoes.calcular_divisao(valor1, valor2)  # erro se divisor = 0
     return jsonify({"resultado": resultado})
 
 if __name__ == "__main__":
